@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Seguridad – Tapa de Conexiones de Generador</title>
+<style>
+@page { size:A4; margin:6mm; }
+*{box-sizing:border-box}
+body{margin:0;background:#e9ecef;font-family:Arial,Helvetica,sans-serif;color:#111;font-size:10px}
+.sheet{width:198mm;min-height:285mm;margin:6mm auto;background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.18)}
+h1{margin:0;padding:6px;text-align:center;font-size:14px;color:#fff;background:#17365D}
+table{width:100%;border-collapse:collapse}
+td,th{border:1px solid #777;padding:3px 4px;vertical-align:middle}
+.meta td{height:25px}.meta input{width:100%;border:0;outline:0;font:inherit}
+.section{background:#17365D;color:#fff;font-weight:bold;font-size:10px;padding:4px 6px;margin-top:4px}
+th{background:#5B9BD5;color:#fff;font-size:9px;text-align:center}
+.check{width:10mm;text-align:center}.check input{width:16px;height:16px;cursor:pointer}
+.item{line-height:1.1}
+.warn{margin-top:4px;padding:4px;text-align:center;font-weight:bold;color:#8a1c1c;background:#fce4d6;border:1px solid #c00000}
+.result{margin-top:4px;padding:6px;border:2px solid #777;text-align:center;font-size:11px;font-weight:bold}
+.pending{background:#fff2cc;color:#7f6000;border-color:#c9a227}.ok{background:#e2f0d9;color:#27632a;border-color:#70ad47}.fail{background:#fce4d6;color:#9c0006;border-color:#c00000}
+button{border:0;padding:6px 10px;margin:4px 2px;cursor:pointer;font-weight:bold;border-radius:3px}.primary{background:#17365D;color:#fff}.secondary{background:#ddd}
+.footer{text-align:right;color:#666;font-size:7px;margin-top:2px}
+@media print{body{background:#fff}.sheet{margin:0;box-shadow:none}button,.screen-only{display:none!important}}
+</style>
+</head>
+<body>
+<div class="sheet">
+<h1>CHECKLIST DE SEGURIDAD – TAPA DE CONEXIONES DE GENERADOR</h1>
+
+<table class="meta">
+<tr>
+<td><b>Equipo:</b><input id="equipo"></td>
+<td><b>N.º:</b><input id="numero"></td>
+<td><b>Fecha:</b><input id="fecha" type="date"></td>
+</tr>
+<tr>
+<td colspan="2"><b>OT:</b><input id="ot"></td>
+<td><b>Responsable:</b><input id="responsable"></td>
+</tr>
+</table>
+
+<div class="section">1. INICIAR EL TRABAJO — AISLAMIENTO Y SEGURIDAD</div>
+<table id="inicio">
+<tr><th>Comprobación crítica</th><th class="check">OK</th><th class="check">FAIL</th></tr>
+</table>
+
+<div class="warn">⛔ NO INICIAR si existe alguna condición FAIL en identificación, aislamiento, bloqueo o ausencia de tensión.</div>
+
+<div class="section">2. PREVENCIÓN DE RIESGOS Y EPI — COMPROBACIÓN PREVIA</div>
+<table id="epi">
+<tr><th>Comprobación de prevención y EPI</th><th class="check">OK</th><th class="check">FAIL</th><th class="check">N/A</th></tr>
+</table>
+
+<div class="warn">⚠ Usar únicamente EPI adecuados al riesgo, en buen estado y definidos por la evaluación de riesgos/procedimiento aplicable. Los EPI eléctricos no sustituyen el aislamiento ni el bloqueo.</div>
+
+<div class="section">3. PUESTA EN SERVICIO Y CONTROL FINAL</div>
+<table id="final">
+<tr><th>Comprobación</th><th class="check">OK</th><th class="check">NOK</th><th class="check">N/A</th></tr>
+</table>
+
+<div class="section">CRITERIO DE PARADA</div>
+<div id="resultado" class="result pending">PENDIENTE — Complete todas las comprobaciones.</div>
+
+<div class="screen-only" style="text-align:center">
+<button class="primary" onclick="verificar()">VERIFICAR AHORA</button>
+<button class="secondary" onclick="window.print()">IMPRIMIR / GUARDAR PDF</button>
+<button class="secondary" onclick="limpiar()">LIMPIAR FORMULARIO</button>
+</div>
+<div class="footer">Documento de comprobación en campo · La verificación se actualiza automáticamente.</div>
+</div>
+
+<script>
+const inicioItems=[
+"Identificar el generador y la zona de intervención.",
+"Identificar <strong>todas las fuentes de energía</strong> y posibles alimentaciones externas.",
+"Parar el generador y realizar el <strong>aislamiento</strong> correspondiente.",
+"Aplicar <strong>bloqueo y etiquetado (LOTO)</strong> para impedir una puesta en marcha accidental.",
+"Verificar la <strong>ausencia de tensión</strong> en el punto de trabajo con instrumento adecuado.",
+"Comprobar y controlar posibles <strong>energías residuales</strong> antes de retirar la tapa.",
+"Delimitar/señalizar la zona y evitar el acceso de personal no autorizado.",
+"Utilizar los <strong>EPI eléctricos y de protección</strong> definidos en la evaluación de riesgos."
+];
+
+const epiItems=[
+"Revisar la evaluación de riesgos/procedimiento y confirmar los EPI requeridos para la tarea.",
+"Comprobar visualmente el <strong>casco de protección</strong> y sus elementos; retirar el EPI si presenta daños.",
+"Comprobar <strong>protección ocular/facial</strong> adecuada al riesgo previsto (p. ej., proyección o arco eléctrico cuando proceda).",
+"Comprobar los <strong>guantes de protección</strong> requeridos; si son guantes aislantes, verificar clase, marcado, estado y vigencia de las comprobaciones aplicables.",
+"Usar <strong>ropa de protección adecuada frente al riesgo eléctrico/térmico</strong> cuando lo establezca la evaluación de riesgos.",
+"Utilizar <strong>calzado de seguridad</strong> adecuado y en buen estado, según la evaluación de riesgos.",
+"Comprobar que los EPI están <strong>limpios, secos, íntegros y correctamente ajustados</strong>; no utilizar EPI deteriorados.",
+"Retirar o asegurar elementos personales que puedan generar riesgo (objetos metálicos, accesorios sueltos, etc.) conforme al procedimiento.",
+"Confirmar que los EPI permiten realizar la tarea sin interferir con el <strong>aislamiento, LOTO y señalización</strong> establecidos."
+];
+
+const finalItems=[
+"Energización realizada de forma controlada y desde posición segura.",
+"No se detectan alarmas, chispas, humo, calentamiento, ruido o comportamiento anómalo.",
+"Protección eléctrica y cierre de la zona de conexiones permanecen correctamente instalados.",
+"Resultado final registrado y cualquier anomalía comunicada."
+];
+
+function addRows(tableId,items,opts){
+ const table=document.getElementById(tableId);
+ items.forEach((txt,i)=>{
+   const tr=document.createElement("tr");
+   const td=document.createElement("td"); td.className="item"; td.innerHTML=txt; tr.appendChild(td);
+   opts.forEach(label=>{
+     const c=document.createElement("td"); c.className="check";
+     const cb=document.createElement("input"); cb.type="radio"; cb.name=tableId+"_"+i; cb.value=label;
+     cb.onchange=verificar; c.appendChild(cb); tr.appendChild(c);
+   });
+   table.appendChild(tr);
+ });
+}
+addRows("inicio",inicioItems,["OK","FAIL"]);
+addRows("epi",epiItems,["OK","FAIL","N/A"]);
+addRows("final",finalItems,["OK","NOK","N/A"]);
+
+function getChoice(group){const x=document.querySelector('input[name="'+group+'"]:checked');return x?x.value:null}
+
+function verificar(){
+ const inicio=inicioItems.map((_,i)=>getChoice("inicio_"+i));
+ const epi=epiItems.map((_,i)=>getChoice("epi_"+i));
+ const fin=finalItems.map((_,i)=>getChoice("final_"+i));
+ const r=document.getElementById("resultado");
+ const criticalFail=inicio.some(x=>x==="FAIL");
+ const epiFail=epi.some(x=>x==="FAIL");
+ const finalFail=fin.some(x=>x==="NOK");
+ const incomplete=inicio.some(x=>!x)||epi.some(x=>!x)||fin.some(x=>!x);
+ r.className="result";
+ if(criticalFail||epiFail){
+   r.classList.add("fail");
+   r.textContent="⛔ NO CONFORME — NO INICIAR / MANTENER FUERA DE SERVICIO. Existe una condición crítica o de EPI en FAIL.";
+ }else if(finalFail){
+   r.classList.add("fail");
+   r.textContent="⛔ NO CONFORME — MANTENER FUERA DE SERVICIO. Existe una condición NOK en el control final.";
+ }else if(incomplete){
+   r.classList.add("pending");
+   r.textContent="⚠ PENDIENTE — Complete todas las comprobaciones antes de determinar el resultado.";
+ }else{
+   r.classList.add("ok");
+   r.textContent="✓ CONFORME / PUEDE PONERSE EN SERVICIO — Todas las comprobaciones son satisfactorias.";
+ }
+}
+
+function limpiar(){
+ document.querySelectorAll("input[type=radio]").forEach(x=>x.checked=false);
+ document.querySelectorAll(".meta input").forEach(x=>x.value="");
+ const r=document.getElementById("resultado");r.className="result pending";
+ r.textContent="PENDIENTE — Complete todas las comprobaciones.";
+}
+</script>
+</body>
+</html>
