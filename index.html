@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16324f">
+  <title>Checklist de Seguridad — Tapa de conexiones de generador</title>
+  <style>
+    :root {
+      --navy: #16324f;
+      --blue: #245b83;
+      --bg: #f3f6f9;
+      --line: #d5dee7;
+      --text: #17212b;
+      --muted: #5b6875;
+      --ok: #18794e;
+      --bad: #b42318;
+      --warn-bg: #fff4e5;
+      --warn-border: #e9a23b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header { background: var(--navy); color: white; padding: 1.5rem 1rem; }
+    .wrap { width: min(100% - 2rem, 980px); margin: 0 auto; }
+    header h1 { margin: 0 0 .35rem; font-size: clamp(1.35rem, 4vw, 2rem); line-height: 1.2; }
+    header p { margin: 0; color: #e0eaf3; }
+    main { padding: 1.25rem 0 3rem; }
+    .panel {
+      background: white; border: 1px solid var(--line); border-radius: 14px;
+      padding: clamp(1rem, 3vw, 1.4rem); margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgb(22 50 79 / 5%);
+    }
+    h2 { font-size: 1.15rem; margin: 0 0 1rem; color: var(--navy); }
+    h3 { font-size: 1rem; margin: 1.2rem 0 .55rem; }
+    .fields { display: grid; grid-template-columns: repeat( auto-fit, minmax(190px, 1fr)); gap: .9rem; }
+    label.field { display: flex; flex-direction: column; gap: .35rem; font-weight: 650; font-size: .92rem; }
+    input[type="text"], input[type="date"], textarea {
+      width: 100%; border: 1px solid #b9c6d3; border-radius: 8px; padding: .7rem .75rem;
+      font: inherit; color: inherit; background: #fff;
+    }
+    input:focus, textarea:focus { outline: 3px solid #9cc9eb; outline-offset: 1px; }
+    .check-row {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+      gap: 1rem; padding: .85rem 0; border-bottom: 1px solid #edf0f3;
+    }
+    .check-row:last-child { border-bottom: 0; }
+    .check-text { display: flex; gap: .65rem; align-items: flex-start; }
+    .num { color: var(--muted); min-width: 1.5rem; font-weight: 750; }
+    .choices { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: flex-end; }
+    .choice { position: relative; display: inline-flex; }
+    .choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .choice span {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 58px;
+      padding: .48rem .72rem; border: 1px solid #b8c5d2; border-radius: 999px;
+      font-size: .88rem; font-weight: 750; cursor: pointer; background: white;
+    }
+    .choice input:focus-visible + span { outline: 3px solid #9cc9eb; outline-offset: 2px; }
+    .choice input:checked + span { color: white; background: var(--blue); border-color: var(--blue); }
+    .choice.ok input:checked + span { background: var(--ok); border-color: var(--ok); }
+    .choice.fail input:checked + span { background: var(--bad); border-color: var(--bad); }
+    .warning {
+      border-left: 4px solid var(--warn-border); background: var(--warn-bg);
+      padding: .9rem 1rem; border-radius: 8px; margin-top: 1rem;
+    }
+    .warning strong { display: block; margin-bottom: .2rem; }
+    .muted { color: var(--muted); font-size: .9rem; }
+    .status { padding: .85rem 1rem; border-radius: 10px; font-weight: 750; margin-bottom: 1rem; background: #e9eef3; }
+    .status.ok { color: #11613f; background: #e6f5ed; }
+    .status.bad { color: #8d1c14; background: #fdecea; }
+    .status.pending { color: #704600; background: #fff4d6; }
+    .actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+    button {
+      border: 0; border-radius: 9px; padding: .78rem 1rem; font: inherit; font-weight: 750;
+      cursor: pointer; background: var(--navy); color: white;
+    }
+    button.secondary { background: #e6edf3; color: var(--navy); border: 1px solid var(--line); }
+    button.danger { background: #fff; color: var(--bad); border: 1px solid #e2aaa6; }
+    button:hover { filter: brightness(.96); }
+    textarea { min-height: 110px; resize: vertical; }
+    footer { text-align: center; padding: 1.5rem 0 2rem; color: var(--muted); font-size: .85rem; }
+    @media (max-width: 640px) {
+      .check-row { grid-template-columns: 1fr; gap: .6rem; }
+      .choices { justify-content: flex-start; }
+      .choice span { min-width: 64px; }
+      .wrap { width: min(100% - 1rem, 980px); }
+    }
+    @media print {
+      body { background: white; font-size: 10pt; }
+      header { background: white; color: black; padding: 0 0 1rem; }
+      header p { color: #333; }
+      .wrap { width: 100%; }
+      main { padding: 0; }
+      .panel { box-shadow: none; break-inside: avoid; border-radius: 0; margin-bottom: .5rem; padding: .7rem; }
+      .actions, .no-print { display: none !important; }
+      input[type="text"], input[type="date"], textarea { border-color: #888; }
+      .choice input:checked + span { color: black; background: #ddd !important; border-color: #333; }
+      .warning { background: #fff; }
+      footer { padding: .5rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Checklist de Seguridad</h1>
+      <p>Tapa de conexiones de generador</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form id="checklist">
+      <section class="panel">
+        <h2>Datos del trabajo</h2>
+        <div class="fields">
+          <label class="field">Equipo
+            <input name="equipo" type="text" autocomplete="off">
+          </label>
+          <label class="field">N.º
+            <input name="numero" type="text" autocomplete="off">
+          </label>
+          <label class="field">Fecha
+            <input name="fecha" type="date">
+          </label>
+          <label class="field">OT
+            <input name="ot" type="text" autocomplete="off">
+          </label>
+          <label class="field">Responsable
+            <input name="responsable" type="text" autocomplete="name">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>1. Iniciar el trabajo — Aislamiento y seguridad</h2>
+        <div id="aislamiento"></div>
+        <div class="warning">
+          <strong>Importante: NO INICIAR</strong>
+          No iniciar si existe alguna condición FAIL en identificación, aislamiento, bloqueo o ausencia de tensión.
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>2. Prevención de riesgos y EPI — Comprobación previa</h2>
+        <div id="epi"></div>
+        <div class="warning">
+          <strong>Uso de EPI</strong>
+          Usar solo EPI adecuados al riesgo, en buen estado y definidos por la evaluación de riesgos/procedimiento. Los EPI eléctricos no sustituyen el aislamiento ni el bloqueo.
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>3. Puesta en servicio y control final</h2>
+        <div id="final"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Resultado y observaciones</h2>
+        <div id="status" class="status pending" role="status" aria-live="polite">Pendiente de completar.</div>
+        <label class="field">Observaciones / anomalías
+          <textarea name="observaciones" placeholder="Anota aquí observaciones, incidencias o medidas adoptadas."></textarea>
+        </label>
+        <p class="muted">La selección de estado es por tarea: solo se puede marcar una opción en cada punto. Puedes cambiarla o desmarcarla pulsando de nuevo la opción seleccionada.</p>
+        <div class="actions no-print">
+          <button type="button" id="save">Guardar en este dispositivo</button>
+          <button type="button" id="load" class="secondary">Recuperar guardado</button>
+          <button type="button" id="print" class="secondary">Imprimir / Guardar PDF</button>
+          <button type="reset" class="danger">Limpiar formulario</button>
+        </div>
+        <p class="muted no-print">El guardado se realiza en el navegador de este dispositivo. No envía datos a un servidor ni los comparte con otros usuarios.</p>
+      </section>
+    </form>
+    <footer>Checklist de Seguridad · Tapa de conexiones de generador</footer>
+  </main>
+
+  <script>
+    const sections = [
+      {
+        id: "aislamiento",
+        key: "aislamiento",
+        options: ["OK", "FAIL"],
+        items: [
+          "Identificar todas las fuentes de energía y posibles alimentaciones externas.",
+          "Desconectar, bajar el interruptor general del motor eléctrico.",
+          "Bloqueo y etiquetado (LOTO) para impedir una puesta en marcha accidental.",
+          "Verificar la ausencia de tensión en el punto de trabajo con la herramienta adecuada.",
+          "Cortocircuito a tierra del sistema eléctrico.",
+          "Comprobar y controlar posibles energías residuales antes de retirar la tapa.",
+          "Delimitar/señalizar la zona y evitar el acceso de personal no autorizado."
+        ]
+      },
+      {
+        id: "epi",
+        key: "epi",
+        options: ["OK", "FAIL", "N/A"],
+        items: [
+          "Revisar la evaluación de riesgos y procedimiento. Confirmar los EPIs requeridos para la tarea.",
+          "Comprobar y verificar el estado correcto de los EPIs."
+        ]
+      },
+      {
+        id: "final",
+        key: "final",
+        options: ["OK", "NOK", "N/A"],
+        items: [
+          "Retirar sistemas de protección y seguridad LOTO del cuadro eléctrico.",
+          "Rearmar alimentación de manera inversa a la desconexión.",
+          "Resultado final registrado y cualquier anomalía comunicada."
+        ]
+      }
+    ];
+
+    function renderSections() {
+      for (const section of sections) {
+        const target = document.getElementById(section.id);
+        section.items.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "check-row";
+          const text = document.createElement("div");
+          text.className = "check-text";
+          const num = document.createElement("span");
+          num.className = "num";
+          num.textContent = `${index + 1}.`;
+          const desc = document.createElement("span");
+          desc.textContent = item;
+          text.append(num, desc);
+
+          const choices = document.createElement("div");
+          choices.className = "choices";
+          choices.setAttribute("role", "group");
+          choices.setAttribute("aria-label", `Estado del punto ${index + 1}`);
+          section.options.forEach(option => {
+            const id = `${section.key}-${index}-${option.toLowerCase().replace("/", "-")}`;
+            const label = document.createElement("label");
+            label.className = "choice " + (option === "OK" ? "ok" : (option === "FAIL" || option === "NOK" ? "fail" : ""));
+            const input = document.createElement("input");
+            input.type = "checkbox";
+            input.name = `${section.key}-${index}`;
+            input.value = option;
+            input.id = id;
+            input.setAttribute("aria-label", `${option}: ${item}`);
+            const span = document.createElement("span");
+            span.textContent = option;
+            label.append(input, span);
+            choices.append(label);
+
+            input.addEventListener("change", () => {
+              if (input.checked) {
+                choices.querySelectorAll('input[type="checkbox"]').forEach(other => {
+                  if (other !== input) other.checked = false;
+                });
+              }
+              updateStatus();
+            });
+          });
+          row.append(text, choices);
+          target.append(row);
+        });
+      }
+    }
+
+    function updateStatus() {
+      const status = document.getElementById("status");
+      const inputs = [...document.querySelectorAll('#checklist input[type="checkbox"][name^="aislamiento-"], #checklist input[type="checkbox"][name^="epi-"], #checklist input[type="checkbox"][name^="final-"]')];
+      const selected = new Map();
+      for (const input of inputs) if (input.checked) selected.set(input.name, input.value);
+
+      const isolationFail = sections[0].items.some((_, i) => selected.get(`aislamiento-${i}`) === "FAIL");
+      const anyFail = [...selected.values()].some(v => v === "FAIL" || v === "NOK");
+      const totalPoints = sections.reduce((n, s) => n + s.items.length, 0);
+      const complete = sections.every(s => s.items.every((_, i) => selected.has(`${s.key}-${i}`)));
+
+      status.className = "status";
+      if (isolationFail) {
+        status.classList.add("bad");
+        status.textContent = "NO INICIAR: hay un FAIL en aislamiento y seguridad.";
+      } else if (anyFail) {
+        status.classList.add("bad");
+        status.textContent = "NO CONFORME: hay uno o más puntos marcados FAIL/NOK. Revisar antes de continuar.";
+      } else if (complete) {
+        status.classList.add("ok");
+        status.textContent = "Puntos revisados. Comprueba las observaciones y aplica el procedimiento de trabajo antes de cerrar.";
+      } else {
+        status.classList.add("pending");
+        const count = selected.size;
+        status.textContent = `Pendiente de completar: ${count} de ${totalPoints} puntos marcados.`;
+      }
+    }
+
+    function getFormData() {
+      const data = {};
+      document.querySelectorAll("#checklist input[type='text'], #checklist input[type='date'], #checklist textarea").forEach(el => data[el.name] = el.value);
+      document.querySelectorAll("#checklist input[type='checkbox']").forEach(el => {
+        if (!data.checks) data.checks = {};
+        if (el.checked) data.checks[el.name] = el.value;
+      });
+      return data;
+    }
+
+    function applyData(data) {
+      if (!data || typeof data !== "object") return;
+      document.querySelectorAll("#checklist input[type='text'], #checklist input[type='date'], #checklist textarea").forEach(el => {
+        el.value = data[el.name] || "";
+      });
+      document.querySelectorAll("#checklist input[type='checkbox']").forEach(el => {
+        el.checked = Boolean(data.checks && data.checks[el.name] === el.value);
+      });
+      updateStatus();
+    }
+
+    renderSections();
+    updateStatus();
+
+    document.getElementById("save").addEventListener("click", () => {
+      try {
+        localStorage.setItem("checklistSeguridadGenerador", JSON.stringify(getFormData()));
+        alert("Checklist guardada en este dispositivo y navegador.");
+      } catch (e) {
+        alert("No se pudo guardar en este navegador. Prueba a imprimir o guardar como PDF.");
+      }
+    });
+    document.getElementById("load").addEventListener("click", () => {
+      try {
+        const saved = localStorage.getItem("checklistSeguridadGenerador");
+        if (!saved) { alert("No hay ninguna checklist guardada en este navegador."); return; }
+        applyData(JSON.parse(saved));
+        alert("Checklist recuperada.");
+      } catch (e) {
+        alert("No se pudo recuperar el guardado.");
+      }
+    });
+    document.getElementById("print").addEventListener("click", () => window.print());
+    document.getElementById("checklist").addEventListener("reset", () => {
+      setTimeout(updateStatus, 0);
+    });
+  </script>
+</body>
+</html>
